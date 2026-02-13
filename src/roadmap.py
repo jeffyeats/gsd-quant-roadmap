@@ -53,7 +53,7 @@ ROADMAP = [
         "id": "rust_book",
         "phase": "spring-2026",
         "title": "The Rust Programming Language (chapters 7-20)",
-        "daily_action": "Read one section of the Rust book + code examples (30 min)",
+        "daily_action": "20 pages of the Rust book + code along (30 min)",
         "start": date(2026, 1, 13),
         "end": date(2026, 5, 31),
     },
