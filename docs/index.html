@@ -21,6 +21,7 @@
     --green: #3fb950;
     --red: #f85149;
     --yellow: #d29922;
+    --purple: #bc8cff;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -29,12 +30,53 @@
     color: var(--text);
     padding: 16px;
     padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
     max-width: 600px;
     margin: 0 auto;
     -webkit-tap-highlight-color: transparent;
   }
   h1 { font-size: 1.3rem; margin-bottom: 4px; }
   .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+
+  /* Tab navigation */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-muted);
+    user-select: none;
+    -webkit-user-select: none;
+    transition: all 0.15s;
+  }
+  .tab:active { opacity: 0.7; }
+  .tab.active { background: var(--border); color: var(--text); }
+  .tab-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .tab.active .tab-badge { background: var(--green); }
+
+  /* Progress bar */
   .progress-bar-container {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -62,6 +104,93 @@
     border-radius: 4px;
     transition: width 0.4s ease;
   }
+
+  /* Daily section */
+  .daily-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .daily-date {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .daily-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .daily-stats .done-count { color: var(--green); font-weight: 600; }
+  .streak { color: var(--yellow); }
+  .daily-progress {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .daily-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .daily-progress-fill.all-done { background: var(--green); }
+  .daily-task {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .daily-task:active { background: rgba(88, 166, 255, 0.05); }
+  .daily-task.checked { opacity: 0.45; }
+  .daily-task.checked .dt-title { text-decoration: line-through; }
+  .dt-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .daily-task.checked .dt-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .dt-check { display: none; color: #fff; font-size: 12px; font-weight: bold; }
+  .daily-task.checked .dt-check { display: block; }
+  .dt-info { flex: 1; min-width: 0; }
+  .dt-title { font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+  .dt-action { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  .daily-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .daily-all-done {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--green);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  /* Phases / milestones */
   .phase {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -130,6 +259,8 @@
   .ms-dates { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
   .ms-completed-date { color: var(--green); }
   .ms-deadline { color: var(--yellow); }
+
+  /* Token */
   .token-bar {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -181,6 +312,8 @@
     padding: 4px 10px;
     font-size: 0.75rem;
   }
+
+  /* Toast */
   .toast {
     position: fixed;
     bottom: 24px;
@@ -195,6 +328,7 @@
     transition: opacity 0.3s;
     pointer-events: none;
     z-index: 100;
+    max-width: 90vw;
   }
   .toast.show { opacity: 1; }
   .toast.error { border-color: var(--red); color: var(--red); }
@@ -215,6 +349,7 @@
     padding: 40px 16px;
     color: var(--text-muted);
   }
+  .hidden { display: none; }
 </style>
 </head>
 <body>
@@ -222,18 +357,30 @@
 <h1>GSD Quant Roadmap</h1>
 <p class="subtitle">Quant Finance Transition Tracker</p>
 
-<div class="progress-bar-container">
-  <div class="progress-label">
-    <span>Overall Progress</span>
-    <span id="progress-text">0 / 31</span>
-  </div>
-  <div class="progress-bar">
-    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-  </div>
+<div class="tabs">
+  <div class="tab active" id="tab-daily" onclick="switchTab('daily')">Today <span class="tab-badge" id="daily-badge">0</span></div>
+  <div class="tab" id="tab-milestones" onclick="switchTab('milestones')">Milestones</div>
 </div>
 
 <div id="token-section"></div>
-<div id="app"><div class="loading-overlay"><span class="spinner"></span> Loading progress...</div></div>
+
+<div id="view-daily">
+  <div class="loading-overlay"><span class="spinner"></span> Loading...</div>
+</div>
+
+<div id="view-milestones" class="hidden">
+  <div class="progress-bar-container">
+    <div class="progress-label">
+      <span>Overall Progress</span>
+      <span id="progress-text">0 / 31</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+  </div>
+  <div id="phases-container"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -250,45 +397,48 @@ const PHASES = [
 ];
 
 const ROADMAP = [
-  { id: 'calc3', phase: 'spring-2026', title: 'Earn an A in Calculus 3', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'linalg', phase: 'spring-2026', title: 'Earn an A in Linear Algebra', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'econ4960r', phase: 'spring-2026', title: 'ECON 4960R research project (quant-focused)', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'clm_book', phase: 'spring-2026', title: 'CLM: Econometrics of Financial Markets', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'python_numpy_pandas', phase: 'spring-2026', title: 'Python NumPy & Pandas mastery', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'c_fundamentals', phase: 'spring-2026', title: 'C fundamentals \u2014 pointers, memory, structs', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'gre_prep_spring', phase: 'spring-2026', title: 'Start GRE prep', start: '2026-02-01', end: '2026-05-31' },
-  { id: 'diff_eq', phase: 'summer-2026', title: 'Differential Equations (MIT OCW 18.03)', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'probability_ross', phase: 'summer-2026', title: 'Sheldon Ross: A First Course in Probability', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'advanced_sql', phase: 'summer-2026', title: 'Advanced SQL \u2014 window functions, CTEs', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'scipy_statsmodels', phase: 'summer-2026', title: 'SciPy & statsmodels \u2014 regressions, GARCH, time series', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'take_gre', phase: 'summer-2026', title: 'Take the GRE \u2014 target 169+ Quant', start: '2026-06-01', end: '2026-08-15', deadline: '2026-08-15' },
-  { id: 'brown_start', phase: 'summer-2026', title: 'Start at Brown Advisory \u2014 crush first 90 days', start: '2026-07-01', end: '2026-09-30' },
-  { id: 'git_mastery', phase: 'summer-2026', title: 'Git & GitHub workflows mastery', start: '2026-06-01', end: '2026-07-31' },
-  { id: 'real_analysis', phase: 'fall-2026', title: "Intro Real Analysis: Abbott's Understanding Analysis", start: '2026-09-01', end: '2026-12-31' },
-  { id: 'shreve_vol1', phase: 'fall-2026', title: 'Shreve Vol I: Stochastic Calculus (discrete-time)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'hull_derivatives', phase: 'fall-2026', title: 'Hull: Options, Futures, and Other Derivatives', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'portfolio_theory', phase: 'fall-2026', title: 'Portfolio theory: Markowitz, Black-Litterman, factor investing', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'cpp_oop', phase: 'fall-2026', title: 'C++ OOP \u2014 classes, templates, STL', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'sklearn_ml', phase: 'fall-2026', title: 'Scikit-learn ML basics', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'rec_letters', phase: 'fall-2026', title: 'Lock in rec letters: Prof Lastrapes + Brown Advisory CEO', start: '2026-09-01', end: '2026-12-15', deadline: '2026-12-15' },
-  { id: 'quant_projects', phase: 'fall-2026', title: 'Build quant projects (optimizer, Fama-French, momentum backtest)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'work_analytics', phase: 'fall-2026', title: 'Volunteer for portfolio analytics projects at work', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'work_python_tools', phase: 'fall-2026', title: 'Build Python tools that solve real problems at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'sop_draft', phase: 'apps-2027', title: 'Draft and finalize Statement of Purpose', start: '2027-01-01', end: '2027-02-28' },
-  { id: 'grinold_kahn', phase: 'apps-2027', title: 'Grinold & Kahn: Active Portfolio Management', start: '2027-01-01', end: '2027-03-31' },
-  { id: 'portfolio_dashboard', phase: 'apps-2027', title: 'Interactive portfolio dashboard (Streamlit/Dash)', start: '2027-01-01', end: '2027-02-28' },
-  { id: 'app_gatech', phase: 'apps-2027', title: 'Submit Georgia Tech MSQCF application', start: '2027-01-01', end: '2027-03-01', deadline: '2027-03-01' },
-  { id: 'app_others', phase: 'apps-2027', title: 'Submit NC State, UNC Charlotte, JHU applications', start: '2027-01-01', end: '2027-03-15', deadline: '2027-03-15' },
-  { id: 'github_portfolio', phase: 'apps-2027', title: 'GitHub portfolio: 3+ well-documented quant repos', start: '2027-01-01', end: '2027-03-15' },
+  { id: 'calc3', phase: 'spring-2026', title: 'Earn an A in Calculus 3', daily_action: '3-5 Calc 3 practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'linalg', phase: 'spring-2026', title: 'Earn an A in Linear Algebra', daily_action: '3-5 Linear Algebra practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'econ4960r', phase: 'spring-2026', title: 'ECON 4960R research project (quant-focused)', daily_action: '45 min on research data/analysis/writing', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'clm_book', phase: 'spring-2026', title: 'CLM: Econometrics of Financial Markets', daily_action: '5-10 pages CLM + derivations (30 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'python_numpy_pandas', phase: 'spring-2026', title: 'Python NumPy & Pandas mastery', daily_action: 'One financial data exercise in NumPy/Pandas (30 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'c_fundamentals', phase: 'spring-2026', title: 'C fundamentals \u2014 pointers, memory, structs', daily_action: 'Write one small C program (20 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'gre_prep_spring', phase: 'spring-2026', title: 'Start GRE prep', daily_action: '30 min GRE quant problems or verbal review', start: '2026-02-01', end: '2026-05-31' },
+  { id: 'diff_eq', phase: 'summer-2026', title: 'Differential Equations (MIT OCW 18.03)', daily_action: '1 hr DiffEq lecture + problems', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'probability_ross', phase: 'summer-2026', title: 'Sheldon Ross: A First Course in Probability', daily_action: '10-15 pages Ross + examples (45 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'advanced_sql', phase: 'summer-2026', title: 'Advanced SQL \u2014 window functions, CTEs', daily_action: 'One LeetCode SQL problem (20 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'scipy_statsmodels', phase: 'summer-2026', title: 'SciPy & statsmodels \u2014 regressions, GARCH, time series', daily_action: 'Implement one model in SciPy/statsmodels (30 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'take_gre', phase: 'summer-2026', title: 'Take the GRE \u2014 target 169+ Quant', daily_action: null, start: '2026-06-01', end: '2026-08-15', deadline: '2026-08-15' },
+  { id: 'brown_start', phase: 'summer-2026', title: 'Start at Brown Advisory \u2014 crush first 90 days', daily_action: 'Show up, learn fast, build relationships', start: '2026-07-01', end: '2026-09-30' },
+  { id: 'git_mastery', phase: 'summer-2026', title: 'Git & GitHub workflows mastery', daily_action: 'Practice Git workflows (branching, PRs, rebasing)', start: '2026-06-01', end: '2026-07-31' },
+  { id: 'real_analysis', phase: 'fall-2026', title: "Intro Real Analysis: Abbott's Understanding Analysis", daily_action: 'One section Abbott + proofs (45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'shreve_vol1', phase: 'fall-2026', title: 'Shreve Vol I: Stochastic Calculus (discrete-time)', daily_action: 'Read + work through Shreve Vol I (45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'hull_derivatives', phase: 'fall-2026', title: 'Hull: Options, Futures, and Other Derivatives', daily_action: 'One section Hull + problems (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'portfolio_theory', phase: 'fall-2026', title: 'Portfolio theory: Markowitz, Black-Litterman, factor investing', daily_action: 'Study portfolio theory concepts + implementation (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'cpp_oop', phase: 'fall-2026', title: 'C++ OOP \u2014 classes, templates, STL', daily_action: 'One C++ lesson (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sklearn_ml', phase: 'fall-2026', title: 'Scikit-learn ML basics', daily_action: 'ML exercise: regression, classification, cross-validation (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'rec_letters', phase: 'fall-2026', title: 'Lock in rec letters: Prof Lastrapes + Brown Advisory CEO', daily_action: null, start: '2026-09-01', end: '2026-12-15', deadline: '2026-12-15' },
+  { id: 'quant_projects', phase: 'fall-2026', title: 'Build quant projects (optimizer, Fama-French, momentum backtest)', daily_action: 'Work on quant project code (45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_analytics', phase: 'fall-2026', title: 'Volunteer for portfolio analytics projects at work', daily_action: 'Look for analytics opportunities at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_python_tools', phase: 'fall-2026', title: 'Build Python tools that solve real problems at Brown Advisory', daily_action: 'Build/improve a Python tool for work (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sop_draft', phase: 'apps-2027', title: 'Draft and finalize Statement of Purpose', daily_action: 'Work on SoP drafts and revisions (45 min)', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'grinold_kahn', phase: 'apps-2027', title: 'Grinold & Kahn: Active Portfolio Management', daily_action: 'Read Grinold & Kahn (30 min)', start: '2027-01-01', end: '2027-03-31' },
+  { id: 'portfolio_dashboard', phase: 'apps-2027', title: 'Interactive portfolio dashboard (Streamlit/Dash)', daily_action: 'Build portfolio dashboard (45 min)', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'app_gatech', phase: 'apps-2027', title: 'Submit Georgia Tech MSQCF application', daily_action: null, start: '2027-01-01', end: '2027-03-01', deadline: '2027-03-01' },
+  { id: 'app_others', phase: 'apps-2027', title: 'Submit NC State, UNC Charlotte, JHU applications', daily_action: null, start: '2027-01-01', end: '2027-03-15', deadline: '2027-03-15' },
+  { id: 'github_portfolio', phase: 'apps-2027', title: 'GitHub portfolio: 3+ well-documented quant repos', daily_action: 'Polish and document GitHub repos (30 min)', start: '2027-01-01', end: '2027-03-15' },
 ];
 
 let progress = {};
 let fileSha = null;
 let updating = false;
+let currentTab = 'daily';
 
 function getToken() { return localStorage.getItem('gsd_github_token'); }
 function setToken(t) { localStorage.setItem('gsd_github_token', t); }
 function clearToken() { localStorage.removeItem('gsd_github_token'); }
+
+function todayStr() { return new Date().toISOString().slice(0, 10); }
 
 function toast(msg, type) {
   const el = document.getElementById('toast');
@@ -304,12 +454,75 @@ function formatDate(d) {
   return months[parseInt(parts[1])-1] + ' ' + parseInt(parts[2]);
 }
 
+function formatDateFull(d) {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dt = new Date(d + 'T12:00:00');
+  return days[dt.getDay()] + ', ' + months[dt.getMonth()] + ' ' + dt.getDate();
+}
+
 function getCurrentPhase() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayStr();
   for (const p of PHASES) {
     if (today >= p.start && today <= p.end) return p.key;
   }
   return PHASES[0].key;
+}
+
+function getDailyLog() {
+  return progress.daily_log || {};
+}
+
+function getTodayChecked() {
+  const log = getDailyLog();
+  return log[todayStr()] || [];
+}
+
+function getActiveDailyTasks() {
+  const today = todayStr();
+  return ROADMAP.filter(m => {
+    if (!m.daily_action) return false;
+    if (today < m.start || today > m.end) return false;
+    const p = progress[m.id];
+    if (p && p.completed) return false;
+    return true;
+  });
+}
+
+function getStreak() {
+  const log = getDailyLog();
+  let streak = 0;
+  const d = new Date();
+  // Check if today is complete — if so, count today
+  const todayTasks = getActiveDailyTasks();
+  const todayChecked = getTodayChecked();
+  const todayAllDone = todayTasks.length > 0 && todayTasks.every(m => todayChecked.includes(m.id));
+  if (todayAllDone) {
+    streak = 1;
+    d.setDate(d.getDate() - 1);
+  } else {
+    // Start checking from yesterday
+    d.setDate(d.getDate() - 1);
+  }
+  // Look back up to 365 days
+  for (let i = 0; i < 365; i++) {
+    const ds = d.toISOString().slice(0, 10);
+    if (log[ds] && log[ds].length > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-daily').className = tab === 'daily' ? 'tab active' : 'tab';
+  document.getElementById('tab-milestones').className = tab === 'milestones' ? 'tab active' : 'tab';
+  document.getElementById('view-daily').className = tab === 'daily' ? '' : 'hidden';
+  document.getElementById('view-milestones').className = tab === 'milestones' ? '' : 'hidden';
 }
 
 function renderTokenSection() {
@@ -322,7 +535,7 @@ function renderTokenSection() {
     </div>`;
   } else {
     el.innerHTML = `<div class="token-bar">
-      <input type="password" id="token-input" placeholder="GitHub PAT (for marking complete)">
+      <input type="password" id="token-input" placeholder="GitHub PAT (for checking off tasks)">
       <button onclick="saveToken()">Save</button>
     </div>`;
   }
@@ -343,8 +556,67 @@ function updateProgressBar() {
   document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
 }
 
-function render() {
-  const app = document.getElementById('app');
+function renderDaily() {
+  const container = document.getElementById('view-daily');
+  const tasks = getActiveDailyTasks();
+  const checked = getTodayChecked();
+  const doneCount = tasks.filter(m => checked.includes(m.id)).length;
+  const streak = getStreak();
+
+  // Update badge
+  const remaining = tasks.length - doneCount;
+  document.getElementById('daily-badge').textContent = remaining;
+
+  let html = '';
+
+  // Header
+  html += `<div class="daily-header">
+    <div class="daily-date">${formatDateFull(todayStr())}</div>
+    <div class="daily-stats">
+      <span><span class="done-count">${doneCount}</span> / ${tasks.length} done today</span>
+      ${streak > 0 ? `<span class="streak">${streak} day streak</span>` : ''}
+    </div>
+    <div class="daily-progress">
+      <div class="daily-progress-fill${doneCount === tasks.length && tasks.length > 0 ? ' all-done' : ''}" style="width: ${tasks.length > 0 ? (doneCount / tasks.length * 100) : 0}%"></div>
+    </div>
+  </div>`;
+
+  if (tasks.length === 0) {
+    html += '<div class="daily-empty">No active daily tasks right now.</div>';
+  } else if (doneCount === tasks.length) {
+    html += '<div class="daily-all-done">All tasks done for today!</div>';
+    // Still show them checked off
+    for (const m of tasks) {
+      html += renderDailyTask(m, true);
+    }
+  } else {
+    // Unchecked first, then checked
+    const unchecked = tasks.filter(m => !checked.includes(m.id));
+    const checkedTasks = tasks.filter(m => checked.includes(m.id));
+    for (const m of unchecked) {
+      html += renderDailyTask(m, false);
+    }
+    for (const m of checkedTasks) {
+      html += renderDailyTask(m, true);
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+function renderDailyTask(m, isChecked) {
+  const cls = isChecked ? ' checked' : '';
+  return `<div class="daily-task${cls}" onclick="toggleDaily('${m.id}')" id="dt-${m.id}">
+    <div class="dt-checkbox"><span class="dt-check">\u2713</span></div>
+    <div class="dt-info">
+      <div class="dt-title">${m.title}</div>
+      <div class="dt-action">${m.daily_action}</div>
+    </div>
+  </div>`;
+}
+
+function renderMilestones() {
+  const container = document.getElementById('phases-container');
   const currentPhase = getCurrentPhase();
   let html = '';
 
@@ -384,12 +656,89 @@ function render() {
     html += '</div></div>';
   }
 
-  app.innerHTML = html;
+  container.innerHTML = html;
   updateProgressBar();
+}
+
+function render() {
+  renderDaily();
+  renderMilestones();
 }
 
 function togglePhase(key) {
   document.getElementById('phase-' + key).classList.toggle('collapsed');
+}
+
+async function commitProgress(message) {
+  const token = getToken();
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(progress, null, 2) + '\n')));
+  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json',
+    },
+    body: JSON.stringify({
+      message: message,
+      content: content,
+      sha: fileSha,
+      branch: BRANCH,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || res.statusText);
+  }
+
+  const data = await res.json();
+  fileSha = data.content.sha;
+}
+
+async function toggleDaily(id) {
+  if (updating) return;
+  const token = getToken();
+  if (!token) {
+    toast('Enter your GitHub PAT first', 'error');
+    return;
+  }
+
+  updating = true;
+  const el = document.getElementById('dt-' + id);
+  if (el) el.style.opacity = '0.4';
+
+  const today = todayStr();
+  if (!progress.daily_log) progress.daily_log = {};
+  if (!progress.daily_log[today]) progress.daily_log[today] = [];
+
+  const idx = progress.daily_log[today].indexOf(id);
+  const wasChecked = idx !== -1;
+
+  if (wasChecked) {
+    progress.daily_log[today].splice(idx, 1);
+  } else {
+    progress.daily_log[today].push(id);
+  }
+
+  try {
+    const milestone = ROADMAP.find(m => m.id === id);
+    const action = wasChecked ? 'Uncheck' : 'Check';
+    await commitProgress(`${action} daily: ${milestone.title} (${today})`);
+    toast(wasChecked ? 'Unchecked' : 'Done!', 'success');
+  } catch (e) {
+    // Revert
+    if (wasChecked) {
+      progress.daily_log[today].push(id);
+    } else {
+      const ri = progress.daily_log[today].indexOf(id);
+      if (ri !== -1) progress.daily_log[today].splice(ri, 1);
+    }
+    toast('Error: ' + e.message, 'error');
+  }
+
+  render();
+  updating = false;
 }
 
 async function toggleMilestone(id) {
@@ -402,11 +751,12 @@ async function toggleMilestone(id) {
 
   updating = true;
   const el = document.getElementById('ms-' + id);
-  el.style.opacity = '0.4';
+  if (el) el.style.opacity = '0.4';
 
   const wasCompleted = progress[id] && progress[id].completed;
   const newCompleted = !wasCompleted;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayStr();
+  const prevState = { ...progress[id] };
 
   progress[id] = {
     completed: newCompleted,
@@ -414,32 +764,11 @@ async function toggleMilestone(id) {
   };
 
   try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(progress, null, 2) + '\n')));
-    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      body: JSON.stringify({
-        message: (newCompleted ? 'Complete' : 'Uncomplete') + ': ' + ROADMAP.find(m => m.id === id).title,
-        content: content,
-        sha: fileSha,
-        branch: BRANCH,
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || res.statusText);
-    }
-
-    const data = await res.json();
-    fileSha = data.content.sha;
+    const milestone = ROADMAP.find(m => m.id === id);
+    await commitProgress((newCompleted ? 'Complete' : 'Uncomplete') + ': ' + milestone.title);
     toast(newCompleted ? 'Marked complete!' : 'Unmarked', 'success');
   } catch (e) {
-    progress[id] = { completed: wasCompleted, completed_date: wasCompleted ? progress[id]?.completed_date : null };
+    progress[id] = prevState;
     toast('Error: ' + e.message, 'error');
   }
 
