@@ -1,0 +1,122 @@
+{
+  "calc3": {
+    "completed": false,
+    "completed_date": null
+  },
+  "linalg": {
+    "completed": false,
+    "completed_date": null
+  },
+  "econ4960r": {
+    "completed": false,
+    "completed_date": null
+  },
+  "clm_book": {
+    "completed": false,
+    "completed_date": null
+  },
+  "python_numpy_pandas": {
+    "completed": false,
+    "completed_date": null
+  },
+  "c_fundamentals": {
+    "completed": false,
+    "completed_date": null
+  },
+  "gre_prep_spring": {
+    "completed": false,
+    "completed_date": null
+  },
+  "diff_eq": {
+    "completed": false,
+    "completed_date": null
+  },
+  "probability_ross": {
+    "completed": false,
+    "completed_date": null
+  },
+  "advanced_sql": {
+    "completed": false,
+    "completed_date": null
+  },
+  "scipy_statsmodels": {
+    "completed": false,
+    "completed_date": null
+  },
+  "take_gre": {
+    "completed": false,
+    "completed_date": null
+  },
+  "brown_start": {
+    "completed": false,
+    "completed_date": null
+  },
+  "git_mastery": {
+    "completed": false,
+    "completed_date": null
+  },
+  "real_analysis": {
+    "completed": false,
+    "completed_date": null
+  },
+  "shreve_vol1": {
+    "completed": false,
+    "completed_date": null
+  },
+  "hull_derivatives": {
+    "completed": false,
+    "completed_date": null
+  },
+  "portfolio_theory": {
+    "completed": false,
+    "completed_date": null
+  },
+  "cpp_oop": {
+    "completed": false,
+    "completed_date": null
+  },
+  "sklearn_ml": {
+    "completed": false,
+    "completed_date": null
+  },
+  "rec_letters": {
+    "completed": false,
+    "completed_date": null
+  },
+  "quant_projects": {
+    "completed": false,
+    "completed_date": null
+  },
+  "work_analytics": {
+    "completed": false,
+    "completed_date": null
+  },
+  "work_python_tools": {
+    "completed": false,
+    "completed_date": null
+  },
+  "sop_draft": {
+    "completed": false,
+    "completed_date": null
+  },
+  "grinold_kahn": {
+    "completed": false,
+    "completed_date": null
+  },
+  "portfolio_dashboard": {
+    "completed": false,
+    "completed_date": null
+  },
+  "app_gatech": {
+    "completed": false,
+    "completed_date": null
+  },
+  "app_others": {
+    "completed": false,
+    "completed_date": null
+  },
+  "github_portfolio": {
+    "completed": false,
+    "completed_date": null
+  }
+}
