@@ -50,10 +50,10 @@ ROADMAP = [
         "end": date(2026, 5, 31),
     },
     {
-        "id": "c_fundamentals",
+        "id": "rust_book",
         "phase": "spring-2026",
-        "title": "C fundamentals — pointers, memory, structs",
-        "daily_action": "Write one small C program (20 min)",
+        "title": "The Rust Programming Language (chapters 7-20)",
+        "daily_action": "Read one section of the Rust book + code examples (30 min)",
         "start": date(2026, 1, 13),
         "end": date(2026, 5, 31),
     },
