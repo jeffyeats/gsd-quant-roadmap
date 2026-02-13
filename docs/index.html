@@ -350,6 +350,128 @@
     color: var(--text-muted);
   }
   .hidden { display: none; }
+
+  /* History view */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-value.green { color: var(--green); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.purple { color: var(--purple); }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .heatmap-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .heatmap-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .heatmap-grid {
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .heatmap-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .heatmap-cell {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--border);
+  }
+  .heatmap-cell.future { opacity: 0.3; }
+  .heatmap-cell.l1 { background: #0e4429; }
+  .heatmap-cell.l2 { background: #006d32; }
+  .heatmap-cell.l3 { background: #26a641; }
+  .heatmap-cell.l4 { background: #39d353; }
+  .heatmap-labels {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    justify-content: flex-end;
+  }
+  .heatmap-labels .heatmap-cell { width: 10px; height: 10px; }
+  .week-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .week-header {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .week-header:active { background: var(--border); }
+  .week-summary { color: var(--text-muted); font-size: 0.78rem; font-weight: 400; }
+  .week-days { border-top: 1px solid var(--border); }
+  .week-section.collapsed .week-days { display: none; }
+  .week-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .week-day:last-child { border-bottom: none; }
+  .week-day-name { color: var(--text-muted); width: 80px; }
+  .week-day-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin: 0 10px;
+    overflow: hidden;
+  }
+  .week-day-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .week-day-fill.full { background: var(--green); }
+  .week-day-count { font-size: 0.75rem; color: var(--text-muted); min-width: 32px; text-align: right; }
+  .week-day.today { background: rgba(88, 166, 255, 0.05); }
+  .week-day.missed .week-day-name { color: var(--red); }
 </style>
 </head>
 <body>
@@ -359,6 +481,7 @@
 
 <div class="tabs">
   <div class="tab active" id="tab-daily" onclick="switchTab('daily')">Today <span class="tab-badge" id="daily-badge">0</span></div>
+  <div class="tab" id="tab-history" onclick="switchTab('history')">History</div>
   <div class="tab" id="tab-milestones" onclick="switchTab('milestones')">Milestones</div>
 </div>
 
@@ -367,6 +490,8 @@
 <div id="view-daily">
   <div class="loading-overlay"><span class="spinner"></span> Loading...</div>
 </div>
+
+<div id="view-history" class="hidden"></div>
 
 <div id="view-milestones" class="hidden">
   <div class="progress-bar-container">
@@ -519,10 +644,11 @@ function getStreak() {
 
 function switchTab(tab) {
   currentTab = tab;
-  document.getElementById('tab-daily').className = tab === 'daily' ? 'tab active' : 'tab';
-  document.getElementById('tab-milestones').className = tab === 'milestones' ? 'tab active' : 'tab';
-  document.getElementById('view-daily').className = tab === 'daily' ? '' : 'hidden';
-  document.getElementById('view-milestones').className = tab === 'milestones' ? '' : 'hidden';
+  for (const t of ['daily', 'history', 'milestones']) {
+    document.getElementById('tab-' + t).className = tab === t ? 'tab active' : 'tab';
+    document.getElementById('view-' + t).className = tab === t ? '' : 'hidden';
+  }
+  if (tab === 'history') renderHistory();
 }
 
 function renderTokenSection() {
@@ -660,9 +786,185 @@ function renderMilestones() {
   updateProgressBar();
 }
 
+function getActiveTasksForDate(dateStr) {
+  return ROADMAP.filter(m => {
+    if (!m.daily_action) return false;
+    if (dateStr < m.start || dateStr > m.end) return false;
+    return true;
+  });
+}
+
+function renderHistory() {
+  const container = document.getElementById('view-history');
+  const log = getDailyLog();
+  const today = todayStr();
+
+  // Compute stats
+  const allDates = Object.keys(log).filter(d => d <= today).sort();
+  const totalDaysTracked = allDates.filter(d => log[d].length > 0).length;
+  const totalCheckins = allDates.reduce((sum, d) => sum + log[d].length, 0);
+
+  let perfectDays = 0;
+  for (const d of allDates) {
+    const active = getActiveTasksForDate(d);
+    if (active.length > 0 && active.every(m => log[d].includes(m.id))) perfectDays++;
+  }
+
+  // Best streak
+  let bestStreak = 0, tempStreak = 0;
+  for (const d of allDates) {
+    if (log[d].length > 0) {
+      tempStreak++;
+      if (tempStreak > bestStreak) bestStreak = tempStreak;
+    } else {
+      tempStreak = 0;
+    }
+  }
+  const currentStreak = getStreak();
+  if (currentStreak > bestStreak) bestStreak = currentStreak;
+
+  let html = '';
+
+  // Stat cards
+  html += `<div class="stats-grid">
+    <div class="stat-card"><div class="stat-value yellow">${currentStreak}</div><div class="stat-label">Current Streak</div></div>
+    <div class="stat-card"><div class="stat-value purple">${bestStreak}</div><div class="stat-label">Best Streak</div></div>
+    <div class="stat-card"><div class="stat-value green">${perfectDays}</div><div class="stat-label">Perfect Days</div></div>
+    <div class="stat-card"><div class="stat-value accent">${totalCheckins}</div><div class="stat-label">Total Check-ins</div></div>
+  </div>`;
+
+  // Heatmap — last 16 weeks
+  html += `<div class="heatmap-section">
+    <div class="heatmap-title">Daily Activity</div>
+    <div class="heatmap-grid" id="heatmap"></div>
+    <div class="heatmap-labels">
+      <span>Less</span>
+      <div class="heatmap-cell"></div>
+      <div class="heatmap-cell l1"></div>
+      <div class="heatmap-cell l2"></div>
+      <div class="heatmap-cell l3"></div>
+      <div class="heatmap-cell l4"></div>
+      <span>More</span>
+    </div>
+  </div>`;
+
+  // Weekly breakdown — last 4 weeks
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const weeks = [];
+  const d = new Date();
+  // Go to start of current week (Sunday)
+  d.setDate(d.getDate() - d.getDay());
+  for (let w = 0; w < 4; w++) {
+    const weekDays = [];
+    for (let i = 6; i >= 0; i--) {
+      const wd = new Date(d);
+      wd.setDate(wd.getDate() + i);
+      weekDays.unshift(wd.toISOString().slice(0, 10));
+    }
+    weeks.unshift({ start: weekDays[0], days: weekDays });
+    d.setDate(d.getDate() - 7);
+  }
+
+  for (let wi = weeks.length - 1; wi >= 0; wi--) {
+    const week = weeks[wi];
+    const weekStart = new Date(week.start + 'T12:00:00');
+    const monthDay = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const weekEnd = new Date(week.days[6] + 'T12:00:00');
+    const endStr = weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const weekLabel = `${monthDay} \u2013 ${endStr}`;
+
+    let weekTotal = 0, weekPossible = 0;
+    for (const ds of week.days) {
+      if (ds > today) continue;
+      const active = getActiveTasksForDate(ds);
+      const checked = (log[ds] || []).length;
+      weekTotal += checked;
+      weekPossible += active.length;
+    }
+    const weekPct = weekPossible > 0 ? Math.round(weekTotal / weekPossible * 100) : 0;
+    const collapsed = wi < weeks.length - 1 ? ' collapsed' : '';
+
+    html += `<div class="week-section${collapsed}" id="week-${wi}">
+      <div class="week-header" onclick="document.getElementById('week-${wi}').classList.toggle('collapsed')">
+        <span>${weekLabel}</span>
+        <span class="week-summary">${weekPct}% completed</span>
+      </div>
+      <div class="week-days">`;
+
+    for (const ds of week.days) {
+      const isFuture = ds > today;
+      const isToday = ds === today;
+      const active = getActiveTasksForDate(ds);
+      const checked = (log[ds] || []).filter(id => active.some(m => m.id === id)).length;
+      const total = active.length;
+      const pct = total > 0 ? (checked / total * 100) : 0;
+      const dt = new Date(ds + 'T12:00:00');
+      const dayLabel = dayNames[dt.getDay()] + ' ' + dt.getDate();
+      const isMissed = !isFuture && !isToday && total > 0 && checked === 0;
+      const cls = isToday ? ' today' : (isMissed ? ' missed' : '');
+      const fillCls = pct >= 100 ? ' full' : '';
+
+      html += `<div class="week-day${cls}">
+        <span class="week-day-name">${dayLabel}${isToday ? ' *' : ''}</span>
+        <div class="week-day-bar"><div class="week-day-fill${fillCls}" style="width: ${isFuture ? 0 : pct}%"></div></div>
+        <span class="week-day-count">${isFuture ? '\u2014' : checked + '/' + total}</span>
+      </div>`;
+    }
+
+    html += '</div></div>';
+  }
+
+  container.innerHTML = html;
+
+  // Render heatmap cells
+  buildHeatmap(log, today);
+}
+
+function buildHeatmap(log, today) {
+  const grid = document.getElementById('heatmap');
+  if (!grid) return;
+  let html = '';
+
+  // Start 15 weeks ago on Sunday
+  const start = new Date();
+  start.setDate(start.getDate() - start.getDay() - 15 * 7);
+
+  for (let w = 0; w < 16; w++) {
+    html += '<div class="heatmap-col">';
+    for (let d = 0; d < 7; d++) {
+      const dt = new Date(start);
+      dt.setDate(dt.getDate() + w * 7 + d);
+      const ds = dt.toISOString().slice(0, 10);
+      const isFuture = ds > today;
+      const active = getActiveTasksForDate(ds);
+      const checked = (log[ds] || []).length;
+      const total = active.length;
+
+      let level = '';
+      if (isFuture) {
+        level = ' future';
+      } else if (total === 0) {
+        level = '';
+      } else {
+        const pct = checked / total;
+        if (pct === 0) level = '';
+        else if (pct <= 0.25) level = ' l1';
+        else if (pct <= 0.5) level = ' l2';
+        else if (pct < 1) level = ' l3';
+        else level = ' l4';
+      }
+
+      html += `<div class="heatmap-cell${level}" title="${ds}: ${checked}/${total}"></div>`;
+    }
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
 function render() {
   renderDaily();
   renderMilestones();
+  if (currentTab === 'history') renderHistory();
 }
 
 function togglePhase(key) {
