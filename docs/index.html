@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSD Quant Roadmap</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 { font-size: 1.3rem; margin-bottom: 4px; }
+  .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+  .progress-bar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+  }
+  .progress-label span:last-child { color: var(--green); font-weight: 600; }
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .phase-header:active { background: var(--border); }
+  .phase-title { font-size: 0.95rem; font-weight: 600; }
+  .phase-count {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+  .phase-chevron {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .phase.collapsed .phase-chevron { transform: rotate(-90deg); }
+  .phase.collapsed .milestones { display: none; }
+  .milestones { border-top: 1px solid var(--border); }
+  .milestone {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    cursor: pointer;
+  }
+  .milestone:last-child { border-bottom: none; }
+  .milestone:active { background: rgba(88, 166, 255, 0.05); }
+  .milestone.completed { opacity: 0.5; }
+  .milestone.completed .ms-title { text-decoration: line-through; }
+  .ms-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .milestone.completed .ms-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .ms-check { display: none; color: #fff; font-size: 14px; font-weight: bold; }
+  .milestone.completed .ms-check { display: block; }
+  .ms-info { flex: 1; min-width: 0; }
+  .ms-title { font-size: 0.9rem; line-height: 1.3; }
+  .ms-dates { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .ms-completed-date { color: var(--green); }
+  .ms-deadline { color: var(--yellow); }
+  .token-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .token-bar input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    font-family: monospace;
+  }
+  .token-bar button, .token-status button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .token-bar button:active { opacity: 0.8; }
+  .token-status {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--green);
+  }
+  .token-status button {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; }
+  .toast.error { border-color: var(--red); color: var(--red); }
+  .toast.success { border-color: var(--green); color: var(--green); }
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-overlay {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<h1>GSD Quant Roadmap</h1>
+<p class="subtitle">Quant Finance Transition Tracker</p>
+
+<div class="progress-bar-container">
+  <div class="progress-label">
+    <span>Overall Progress</span>
+    <span id="progress-text">0 / 31</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+  </div>
+</div>
+
+<div id="token-section"></div>
+<div id="app"><div class="loading-overlay"><span class="spinner"></span> Loading progress...</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const OWNER = 'jeffyeats';
+const REPO = 'gsd-quant-roadmap';
+const FILE_PATH = 'data/progress.json';
+const BRANCH = 'main';
+
+const PHASES = [
+  { key: 'spring-2026', label: 'Spring 2026 \u2014 Final Semester', start: '2026-01-13', end: '2026-05-31' },
+  { key: 'summer-2026', label: 'Summer 2026 \u2014 Brown Advisory Start', start: '2026-06-01', end: '2026-09-30' },
+  { key: 'fall-2026', label: 'Fall 2026 \u2014 Building at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
+  { key: 'apps-2027', label: 'Jan\u2013Mar 2027 \u2014 Application Sprint', start: '2027-01-01', end: '2027-03-31' },
+];
+
+const ROADMAP = [
+  { id: 'calc3', phase: 'spring-2026', title: 'Earn an A in Calculus 3', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'linalg', phase: 'spring-2026', title: 'Earn an A in Linear Algebra', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'econ4960r', phase: 'spring-2026', title: 'ECON 4960R research project (quant-focused)', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'clm_book', phase: 'spring-2026', title: 'CLM: Econometrics of Financial Markets', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'python_numpy_pandas', phase: 'spring-2026', title: 'Python NumPy & Pandas mastery', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'c_fundamentals', phase: 'spring-2026', title: 'C fundamentals \u2014 pointers, memory, structs', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'gre_prep_spring', phase: 'spring-2026', title: 'Start GRE prep', start: '2026-02-01', end: '2026-05-31' },
+  { id: 'diff_eq', phase: 'summer-2026', title: 'Differential Equations (MIT OCW 18.03)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'probability_ross', phase: 'summer-2026', title: 'Sheldon Ross: A First Course in Probability', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'advanced_sql', phase: 'summer-2026', title: 'Advanced SQL \u2014 window functions, CTEs', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'scipy_statsmodels', phase: 'summer-2026', title: 'SciPy & statsmodels \u2014 regressions, GARCH, time series', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'take_gre', phase: 'summer-2026', title: 'Take the GRE \u2014 target 169+ Quant', start: '2026-06-01', end: '2026-08-15', deadline: '2026-08-15' },
+  { id: 'brown_start', phase: 'summer-2026', title: 'Start at Brown Advisory \u2014 crush first 90 days', start: '2026-07-01', end: '2026-09-30' },
+  { id: 'git_mastery', phase: 'summer-2026', title: 'Git & GitHub workflows mastery', start: '2026-06-01', end: '2026-07-31' },
+  { id: 'real_analysis', phase: 'fall-2026', title: "Intro Real Analysis: Abbott's Understanding Analysis", start: '2026-09-01', end: '2026-12-31' },
+  { id: 'shreve_vol1', phase: 'fall-2026', title: 'Shreve Vol I: Stochastic Calculus (discrete-time)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'hull_derivatives', phase: 'fall-2026', title: 'Hull: Options, Futures, and Other Derivatives', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'portfolio_theory', phase: 'fall-2026', title: 'Portfolio theory: Markowitz, Black-Litterman, factor investing', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'cpp_oop', phase: 'fall-2026', title: 'C++ OOP \u2014 classes, templates, STL', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sklearn_ml', phase: 'fall-2026', title: 'Scikit-learn ML basics', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'rec_letters', phase: 'fall-2026', title: 'Lock in rec letters: Prof Lastrapes + Brown Advisory CEO', start: '2026-09-01', end: '2026-12-15', deadline: '2026-12-15' },
+  { id: 'quant_projects', phase: 'fall-2026', title: 'Build quant projects (optimizer, Fama-French, momentum backtest)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_analytics', phase: 'fall-2026', title: 'Volunteer for portfolio analytics projects at work', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_python_tools', phase: 'fall-2026', title: 'Build Python tools that solve real problems at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sop_draft', phase: 'apps-2027', title: 'Draft and finalize Statement of Purpose', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'grinold_kahn', phase: 'apps-2027', title: 'Grinold & Kahn: Active Portfolio Management', start: '2027-01-01', end: '2027-03-31' },
+  { id: 'portfolio_dashboard', phase: 'apps-2027', title: 'Interactive portfolio dashboard (Streamlit/Dash)', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'app_gatech', phase: 'apps-2027', title: 'Submit Georgia Tech MSQCF application', start: '2027-01-01', end: '2027-03-01', deadline: '2027-03-01' },
+  { id: 'app_others', phase: 'apps-2027', title: 'Submit NC State, UNC Charlotte, JHU applications', start: '2027-01-01', end: '2027-03-15', deadline: '2027-03-15' },
+  { id: 'github_portfolio', phase: 'apps-2027', title: 'GitHub portfolio: 3+ well-documented quant repos', start: '2027-01-01', end: '2027-03-15' },
+];
+
+let progress = {};
+let fileSha = null;
+let updating = false;
+
+function getToken() { return localStorage.getItem('gsd_github_token'); }
+function setToken(t) { localStorage.setItem('gsd_github_token', t); }
+function clearToken() { localStorage.removeItem('gsd_github_token'); }
+
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (type || '');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.className = 'toast', 2500);
+}
+
+function formatDate(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parts = d.split('-');
+  return months[parseInt(parts[1])-1] + ' ' + parseInt(parts[2]);
+}
+
+function getCurrentPhase() {
+  const today = new Date().toISOString().slice(0, 10);
+  for (const p of PHASES) {
+    if (today >= p.start && today <= p.end) return p.key;
+  }
+  return PHASES[0].key;
+}
+
+function renderTokenSection() {
+  const el = document.getElementById('token-section');
+  const token = getToken();
+  if (token) {
+    el.innerHTML = `<div class="token-status">
+      <span>GitHub token saved</span>
+      <button onclick="clearToken(); renderTokenSection(); toast('Token removed')">Remove</button>
+    </div>`;
+  } else {
+    el.innerHTML = `<div class="token-bar">
+      <input type="password" id="token-input" placeholder="GitHub PAT (for marking complete)">
+      <button onclick="saveToken()">Save</button>
+    </div>`;
+  }
+}
+
+function saveToken() {
+  const val = document.getElementById('token-input').value.trim();
+  if (!val) return;
+  setToken(val);
+  renderTokenSection();
+  toast('Token saved', 'success');
+}
+
+function updateProgressBar() {
+  const total = ROADMAP.length;
+  const done = ROADMAP.filter(m => progress[m.id] && progress[m.id].completed).length;
+  document.getElementById('progress-text').textContent = done + ' / ' + total;
+  document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
+}
+
+function render() {
+  const app = document.getElementById('app');
+  const currentPhase = getCurrentPhase();
+  let html = '';
+
+  for (const phase of PHASES) {
+    const milestones = ROADMAP.filter(m => m.phase === phase.key);
+    const done = milestones.filter(m => progress[m.id] && progress[m.id].completed).length;
+    const collapsed = phase.key !== currentPhase ? ' collapsed' : '';
+
+    html += `<div class="phase${collapsed}" id="phase-${phase.key}">`;
+    html += `<div class="phase-header" onclick="togglePhase('${phase.key}')">
+      <div>
+        <div class="phase-title">${phase.label}</div>
+        <div class="phase-count">${done} / ${milestones.length} complete</div>
+      </div>
+      <svg class="phase-chevron" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M4.427 4.427a.75.75 0 011.06-.013L8 6.777l2.513-2.363a.75.75 0 111.027 1.093l-3 2.82a.75.75 0 01-1.027 0l-3-2.82a.75.75 0 01-.086-1.08z"/>
+      </svg>
+    </div>`;
+    html += '<div class="milestones">';
+
+    for (const m of milestones) {
+      const p = progress[m.id] || { completed: false, completed_date: null };
+      const cls = p.completed ? ' completed' : '';
+      let dateStr = formatDate(m.start) + ' \u2013 ' + formatDate(m.end);
+      if (m.deadline) dateStr += ` <span class="ms-deadline">(deadline: ${formatDate(m.deadline)})</span>`;
+      if (p.completed && p.completed_date) dateStr = `<span class="ms-completed-date">Completed ${p.completed_date}</span>`;
+
+      html += `<div class="milestone${cls}" onclick="toggleMilestone('${m.id}')" id="ms-${m.id}">
+        <div class="ms-checkbox"><span class="ms-check">\u2713</span></div>
+        <div class="ms-info">
+          <div class="ms-title">${m.title}</div>
+          <div class="ms-dates">${dateStr}</div>
+        </div>
+      </div>`;
+    }
+
+    html += '</div></div>';
+  }
+
+  app.innerHTML = html;
+  updateProgressBar();
+}
+
+function togglePhase(key) {
+  document.getElementById('phase-' + key).classList.toggle('collapsed');
+}
+
+async function toggleMilestone(id) {
+  if (updating) return;
+  const token = getToken();
+  if (!token) {
+    toast('Enter your GitHub PAT first', 'error');
+    return;
+  }
+
+  updating = true;
+  const el = document.getElementById('ms-' + id);
+  el.style.opacity = '0.4';
+
+  const wasCompleted = progress[id] && progress[id].completed;
+  const newCompleted = !wasCompleted;
+  const today = new Date().toISOString().slice(0, 10);
+
+  progress[id] = {
+    completed: newCompleted,
+    completed_date: newCompleted ? today : null
+  };
+
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(progress, null, 2) + '\n')));
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json',
+      },
+      body: JSON.stringify({
+        message: (newCompleted ? 'Complete' : 'Uncomplete') + ': ' + ROADMAP.find(m => m.id === id).title,
+        content: content,
+        sha: fileSha,
+        branch: BRANCH,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || res.statusText);
+    }
+
+    const data = await res.json();
+    fileSha = data.content.sha;
+    toast(newCompleted ? 'Marked complete!' : 'Unmarked', 'success');
+  } catch (e) {
+    progress[id] = { completed: wasCompleted, completed_date: wasCompleted ? progress[id]?.completed_date : null };
+    toast('Error: ' + e.message, 'error');
+  }
+
+  render();
+  updating = false;
+}
+
+async function loadProgress() {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' },
+    });
+    if (!res.ok) throw new Error('Failed to load progress');
+    const data = await res.json();
+    fileSha = data.sha;
+    progress = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+  } catch (e) {
+    toast('Could not load progress: ' + e.message, 'error');
+    progress = {};
+  }
+  render();
+}
+
+renderTokenSection();
+loadProgress();
+</script>
+</body>
+</html>
