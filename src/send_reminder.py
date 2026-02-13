@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-Builds the daily reminder message and sends it via Twilio SMS.
+Builds the daily reminder message and sends it via Pushover.
 Usage:
-    python send_reminder.py            # Send SMS
+    python send_reminder.py            # Send push notification
     python send_reminder.py --dry-run  # Print message, don't send
 """
 
 import argparse
+import json
 import os
+import subprocess
 import sys
 from datetime import date, timedelta
 
@@ -18,8 +20,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from progress import get_stats, is_completed, load_progress
 from roadmap import PHASES, ROADMAP, get_active_milestones, get_current_phase
-
-MAX_SMS_LENGTH = 1600
 
 MOTIVATIONAL_CLOSERS = [
     "The 3.1 doesn't define you. The work does.",
@@ -136,21 +136,13 @@ def get_weekly_summary(today: date, progress: dict) -> str | None:
 
 
 def build_message(today: date) -> str:
-    """Build the full SMS message for today."""
+    """Build the full message for today."""
     progress = load_progress()
     parts = []
-
-    # Header
-    day_name = today.strftime("%A")
-    date_str = today.strftime("%m/%d")
-    phase_key = get_current_phase(today)
-    phase_label = PHASES[phase_key]["label"] if phase_key else "Off-schedule"
-    parts.append(f"{day_name} {date_str} | {phase_label}")
 
     # Weekly summary (Monday only)
     weekly = get_weekly_summary(today, progress)
     if weekly:
-        parts.append("")
         parts.append(weekly)
 
     # Top 3 focus tasks
@@ -190,35 +182,42 @@ def build_message(today: date) -> str:
     parts.append("")
     parts.append(get_closer(today))
 
-    message = "\n".join(parts)
-
-    # Truncate if needed
-    if len(message) > MAX_SMS_LENGTH:
-        message = message[: MAX_SMS_LENGTH - 3] + "..."
-
-    return message
+    return "\n".join(parts)
 
 
-def send_sms(message: str) -> None:
-    """Send message via Twilio."""
-    from twilio.rest import Client
+def build_title(today: date) -> str:
+    """Build the notification title."""
+    day_name = today.strftime("%A")
+    date_str = today.strftime("%m/%d")
+    phase_key = get_current_phase(today)
+    phase_label = PHASES[phase_key]["label"] if phase_key else "Off-schedule"
+    return f"{day_name} {date_str} | {phase_label}"
 
-    account_sid = os.environ["TWILIO_ACCOUNT_SID"]
-    auth_token = os.environ["TWILIO_AUTH_TOKEN"]
-    from_number = os.environ["TWILIO_FROM_NUMBER"]
-    to_number = os.environ["MY_PHONE_NUMBER"]
 
-    client = Client(account_sid, auth_token)
-    msg = client.messages.create(
-        body=message,
-        from_=from_number,
-        to=to_number,
+def send_notification(title: str, message: str) -> None:
+    """Send push notification via Pushover."""
+    result = subprocess.run(
+        [
+            "curl", "-s", "-X", "POST",
+            "https://api.pushover.net/1/messages.json",
+            "-F", f"token={os.environ['PUSHOVER_API_TOKEN']}",
+            "-F", f"user={os.environ['PUSHOVER_USER_KEY']}",
+            "-F", f"title={title}",
+            "-F", f"message={message}",
+        ],
+        capture_output=True,
+        text=True,
     )
-    print(f"SMS sent: {msg.sid}")
+    response = json.loads(result.stdout)
+    if response.get("status") == 1:
+        print(f"Notification sent (request {response['request']})")
+    else:
+        print(f"Failed: {result.stdout}", file=sys.stderr)
+        sys.exit(1)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Daily quant roadmap SMS reminder")
+    parser = argparse.ArgumentParser(description="Daily quant roadmap reminder")
     parser.add_argument("--dry-run", action="store_true", help="Print message without sending")
     parser.add_argument("--date", type=str, help="Override date (YYYY-MM-DD) for testing")
     args = parser.parse_args()
@@ -231,15 +230,17 @@ def main():
     else:
         today = date.today()
 
+    title = build_title(today)
     message = build_message(today)
 
     if args.dry_run:
         print("=" * 50)
+        print(title)
+        print("-" * 50)
         print(message)
         print("=" * 50)
-        print(f"\nCharacters: {len(message)}/{MAX_SMS_LENGTH}")
     else:
-        send_sms(message)
+        send_notification(title, message)
 
 
 if __name__ == "__main__":
