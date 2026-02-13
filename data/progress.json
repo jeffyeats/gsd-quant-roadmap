@@ -120,6 +120,8 @@
     "completed_date": null
   },
   "daily_log": {
-    "2026-02-13": []
+    "2026-02-13": [
+      "rust_book"
+    ]
   }
 }
