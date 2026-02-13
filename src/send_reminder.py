@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the daily reminder message and sends it via email-to-SMS gateway.
+Builds the daily reminder message and sends it via Twilio SMS.
 Usage:
     python send_reminder.py            # Send SMS
     python send_reminder.py --dry-run  # Print message, don't send
@@ -8,10 +8,8 @@ Usage:
 
 import argparse
 import os
-import smtplib
 import sys
 from datetime import date, timedelta
-from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
 
@@ -202,23 +200,21 @@ def build_message(today: date) -> str:
 
 
 def send_sms(message: str) -> None:
-    """Send message via Gmail SMTP to AT&T email-to-SMS gateway."""
-    gmail_user = os.environ["GMAIL_ADDRESS"]
-    gmail_app_password = os.environ["GMAIL_APP_PASSWORD"]
-    phone_number = os.environ["MY_PHONE_NUMBER"]
+    """Send message via Twilio."""
+    from twilio.rest import Client
 
-    # AT&T SMS gateway
-    sms_gateway = f"{phone_number}@txt.att.net"
+    account_sid = os.environ["TWILIO_ACCOUNT_SID"]
+    auth_token = os.environ["TWILIO_AUTH_TOKEN"]
+    from_number = os.environ["TWILIO_FROM_NUMBER"]
+    to_number = os.environ["MY_PHONE_NUMBER"]
 
-    msg = MIMEText(message)
-    msg["From"] = gmail_user
-    msg["To"] = sms_gateway
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(gmail_user, gmail_app_password)
-        server.sendmail(gmail_user, sms_gateway, msg.as_string())
-
-    print(f"SMS sent to {phone_number} via AT&T gateway")
+    client = Client(account_sid, auth_token)
+    msg = client.messages.create(
+        body=message,
+        from_=from_number,
+        to=to_number,
+    )
+    print(f"SMS sent: {msg.sid}")
 
 
 def main():
