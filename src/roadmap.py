@@ -34,10 +34,10 @@ ROADMAP = [
         "end": date(2026, 5, 8),
     },
     {
-        "id": "clm_book",
+        "id": "hull_derivatives_spring",
         "phase": "spring-2026",
-        "title": "CLM: Econometrics of Financial Markets",
-        "daily_action": "5-10 pages CLM + derivations (30 min)",
+        "title": "Hull: Options, Futures, and Other Derivatives",
+        "daily_action": "10-15 pages Hull + end-of-chapter problems (30 min)",
         "start": date(2026, 1, 13),
         "end": date(2026, 5, 31),
     },
