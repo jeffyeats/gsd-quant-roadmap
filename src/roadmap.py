@@ -42,27 +42,11 @@ ROADMAP = [
         "end": date(2026, 5, 31),
     },
     {
-        "id": "python_numpy_pandas",
-        "phase": "spring-2026",
-        "title": "Crawl support: Python for quant workflows (NumPy/Pandas basics)",
-        "daily_action": "One financial data exercise in NumPy/Pandas (30 min)",
-        "start": date(2026, 1, 13),
-        "end": date(2026, 5, 31),
-    },
-    {
         "id": "rust_book",
         "phase": "spring-2026",
         "title": "Crawl core: Finish Rust book + build chapter projects",
         "daily_action": "Rust book + code-along + one exercise/project rep (30-45 min)",
         "start": date(2026, 1, 13),
-        "end": date(2026, 5, 31),
-    },
-    {
-        "id": "gre_prep_spring",
-        "phase": "spring-2026",
-        "title": "Crawl support: Start GRE prep (consistency phase)",
-        "daily_action": "30 min GRE quant problems or verbal review",
-        "start": date(2026, 2, 1),
         "end": date(2026, 5, 31),
     },
     # ── Phase 2: June–August 2026 (Summer → Start at Brown Advisory) ──
