@@ -515,43 +515,47 @@ const FILE_PATH = 'data/progress.json';
 const BRANCH = 'main';
 
 const PHASES = [
-  { key: 'spring-2026', label: 'Spring 2026 \u2014 Final Semester', start: '2026-01-13', end: '2026-05-31' },
-  { key: 'summer-2026', label: 'Summer 2026 \u2014 Brown Advisory Start', start: '2026-06-01', end: '2026-09-30' },
-  { key: 'fall-2026', label: 'Fall 2026 \u2014 Building at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
-  { key: 'apps-2027', label: 'Jan\u2013Mar 2027 \u2014 Application Sprint', start: '2027-01-01', end: '2027-03-31' },
+  { key: 'spring-2026', label: 'Crawl \u2014 Foundations (Spring 2026)', start: '2026-01-13', end: '2026-05-31' },
+  { key: 'summer-2026', label: 'Walk \u2014 Core Quant Buildout I (Summer 2026)', start: '2026-06-01', end: '2026-09-30' },
+  { key: 'fall-2026', label: 'Walk \u2014 Core Quant Buildout II (Fall 2026)', start: '2026-09-01', end: '2026-12-31' },
+  { key: 'apps-2027', label: 'Run \u2014 Quant Projects + MFE Applications (Jan\u2013Mar 2027)', start: '2027-01-01', end: '2027-03-31' },
 ];
 
 const ROADMAP = [
-  { id: 'calc3', phase: 'spring-2026', title: 'Earn an A in Calculus 3', daily_action: '3-5 Calc 3 practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'linalg', phase: 'spring-2026', title: 'Earn an A in Linear Algebra', daily_action: '3-5 Linear Algebra practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'econ4960r', phase: 'spring-2026', title: 'ECON 4960R research project (quant-focused)', daily_action: '45 min on research data/analysis/writing', start: '2026-01-13', end: '2026-05-08' },
-  { id: 'hull_derivatives_spring', phase: 'spring-2026', title: 'Hull: Options, Futures, and Other Derivatives', daily_action: '10-15 pages Hull + end-of-chapter problems (30 min)', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'python_numpy_pandas', phase: 'spring-2026', title: 'Python NumPy & Pandas mastery', daily_action: 'One financial data exercise in NumPy/Pandas (30 min)', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'rust_book', phase: 'spring-2026', title: 'The Rust Programming Language (chapters 7-20)', daily_action: '20 pages of the Rust book + code along (30 min)', start: '2026-01-13', end: '2026-05-31' },
-  { id: 'gre_prep_spring', phase: 'spring-2026', title: 'Start GRE prep', daily_action: '30 min GRE quant problems or verbal review', start: '2026-02-01', end: '2026-05-31' },
-  { id: 'diff_eq', phase: 'summer-2026', title: 'Differential Equations (MIT OCW 18.03)', daily_action: '1 hr DiffEq lecture + problems', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'probability_ross', phase: 'summer-2026', title: 'Sheldon Ross: A First Course in Probability', daily_action: '10-15 pages Ross + examples (45 min)', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'advanced_sql', phase: 'summer-2026', title: 'Advanced SQL \u2014 window functions, CTEs', daily_action: 'One LeetCode SQL problem (20 min)', start: '2026-06-01', end: '2026-08-31' },
-  { id: 'scipy_statsmodels', phase: 'summer-2026', title: 'SciPy & statsmodels \u2014 regressions, GARCH, time series', daily_action: 'Implement one model in SciPy/statsmodels (30 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'calc3', phase: 'spring-2026', title: 'Crawl core: Finish Calculus 3 strong (target A)', daily_action: '3-5 Calc 3 practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'linalg', phase: 'spring-2026', title: 'Crawl core: Finish Linear Algebra strong (target A)', daily_action: '3-5 Linear Algebra practice problems (30 min)', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'econ4960r', phase: 'spring-2026', title: 'Crawl core: Finish ECON 4960R (quant-focused research)', daily_action: '45 min on research data/analysis/writing', start: '2026-01-13', end: '2026-05-08' },
+  { id: 'hull_derivatives_spring', phase: 'spring-2026', title: 'Crawl core: Finish Hull (first pass + problems)', daily_action: '10-20 pages Hull + notes/problems (30-45 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'python_numpy_pandas', phase: 'spring-2026', title: 'Crawl support: Python for quant workflows (NumPy/Pandas basics)', daily_action: 'One financial data exercise in NumPy/Pandas (30 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'rust_book', phase: 'spring-2026', title: 'Crawl core: Finish Rust book + build chapter projects', daily_action: 'Rust book + code-along + one exercise/project rep (30-45 min)', start: '2026-01-13', end: '2026-05-31' },
+  { id: 'gre_prep_spring', phase: 'spring-2026', title: 'Crawl support: Start GRE prep (consistency phase)', daily_action: '30 min GRE quant problems or verbal review', start: '2026-02-01', end: '2026-05-31' },
+  { id: 'diff_eq', phase: 'summer-2026', title: 'Walk [Math]: Differential Equations (MIT OCW 18.03, ODE intuition + reps)', daily_action: '45-60 min DiffEq lecture/problems + short derivation notes', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'probability_ross', phase: 'summer-2026', title: 'Walk [Math]: Probability (Ross) + problem solving for interviews/coursework', daily_action: 'Ross reading + 5-10 probability problems (45 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'advanced_sql', phase: 'summer-2026', title: 'Walk [Coding]: Advanced SQL (CTEs, window functions, analytics queries)', daily_action: 'One LeetCode SQL problem (20 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'scipy_statsmodels', phase: 'summer-2026', title: 'Walk [Coding]: SciPy + statsmodels (regression, time series, GARCH)', daily_action: 'Implement one regression/time-series/stat model (30-45 min)', start: '2026-06-01', end: '2026-08-31' },
+  { id: 'numerical_methods', phase: 'summer-2026', title: 'Walk [Math]: Numerical methods foundations (root finding, optimization, Monte Carlo)', daily_action: 'One numerical methods concept + implementation rep (30-45 min)', start: '2026-06-01', end: '2026-08-31' },
   { id: 'take_gre', phase: 'summer-2026', title: 'Take the GRE \u2014 target 169+ Quant', daily_action: null, start: '2026-06-01', end: '2026-08-15', deadline: '2026-08-15' },
   { id: 'brown_start', phase: 'summer-2026', title: 'Start at Brown Advisory \u2014 crush first 90 days', daily_action: 'Show up, learn fast, build relationships', start: '2026-07-01', end: '2026-09-30' },
-  { id: 'git_mastery', phase: 'summer-2026', title: 'Git & GitHub workflows mastery', daily_action: 'Practice Git workflows (branching, PRs, rebasing)', start: '2026-06-01', end: '2026-07-31' },
-  { id: 'real_analysis', phase: 'fall-2026', title: "Intro Real Analysis: Abbott's Understanding Analysis", daily_action: 'One section Abbott + proofs (45 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'shreve_vol1', phase: 'fall-2026', title: 'Shreve Vol I: Stochastic Calculus (discrete-time)', daily_action: 'Read + work through Shreve Vol I (45 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'hull_derivatives', phase: 'fall-2026', title: 'Hull: Options, Futures, and Other Derivatives', daily_action: 'One section Hull + problems (30 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'portfolio_theory', phase: 'fall-2026', title: 'Portfolio theory: Markowitz, Black-Litterman, factor investing', daily_action: 'Study portfolio theory concepts + implementation (30 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'cpp_oop', phase: 'fall-2026', title: 'C++ OOP \u2014 classes, templates, STL', daily_action: 'One C++ lesson (30 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'sklearn_ml', phase: 'fall-2026', title: 'Scikit-learn ML basics', daily_action: 'ML exercise: regression, classification, cross-validation (30 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'rec_letters', phase: 'fall-2026', title: 'Lock in rec letters: Prof Lastrapes + Brown Advisory CEO', daily_action: null, start: '2026-09-01', end: '2026-12-15', deadline: '2026-12-15' },
-  { id: 'quant_projects', phase: 'fall-2026', title: 'Build quant projects (optimizer, Fama-French, momentum backtest)', daily_action: 'Work on quant project code (45 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'work_analytics', phase: 'fall-2026', title: 'Volunteer for portfolio analytics projects at work', daily_action: 'Look for analytics opportunities at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'work_python_tools', phase: 'fall-2026', title: 'Build Python tools that solve real problems at Brown Advisory', daily_action: 'Build/improve a Python tool for work (30 min)', start: '2026-09-01', end: '2026-12-31' },
-  { id: 'sop_draft', phase: 'apps-2027', title: 'Draft and finalize Statement of Purpose', daily_action: 'Work on SoP drafts and revisions (45 min)', start: '2027-01-01', end: '2027-02-28' },
-  { id: 'grinold_kahn', phase: 'apps-2027', title: 'Grinold & Kahn: Active Portfolio Management', daily_action: 'Read Grinold & Kahn (30 min)', start: '2027-01-01', end: '2027-03-31' },
-  { id: 'portfolio_dashboard', phase: 'apps-2027', title: 'Interactive portfolio dashboard (Streamlit/Dash)', daily_action: 'Build portfolio dashboard (45 min)', start: '2027-01-01', end: '2027-02-28' },
-  { id: 'app_gatech', phase: 'apps-2027', title: 'Submit Georgia Tech MSQCF application', daily_action: null, start: '2027-01-01', end: '2027-03-01', deadline: '2027-03-01' },
-  { id: 'app_others', phase: 'apps-2027', title: 'Submit NC State, UNC Charlotte, JHU applications', daily_action: null, start: '2027-01-01', end: '2027-03-15', deadline: '2027-03-15' },
-  { id: 'github_portfolio', phase: 'apps-2027', title: 'GitHub portfolio: 3+ well-documented quant repos', daily_action: 'Polish and document GitHub repos (30 min)', start: '2027-01-01', end: '2027-03-15' },
+  { id: 'git_mastery', phase: 'summer-2026', title: 'Walk [Coding]: Git/GitHub workflows mastery', daily_action: 'Practice Git workflows + cleaner commit habits (20-30 min)', start: '2026-06-01', end: '2026-07-31' },
+  { id: 'real_analysis', phase: 'fall-2026', title: "Walk [Math]: Real Analysis foundations (Abbott, selected sections)", daily_action: 'Abbott reading + proof practice (45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'shreve_vol1', phase: 'fall-2026', title: 'Walk [Math]: Shreve Vol I (discrete-time stochastic calculus)', daily_action: 'Shreve reading + worked examples/notes (45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'hull_derivatives', phase: 'fall-2026', title: 'Walk [Finance]: Hull second pass (deeper chapters + harder problems)', daily_action: 'One section Hull + worked problems + formula notes (30-45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'portfolio_theory', phase: 'fall-2026', title: 'Walk [Finance]: Portfolio theory (Markowitz, Black-Litterman, factors)', daily_action: 'Portfolio theory study + small implementation reps (30-45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'cpp_oop', phase: 'fall-2026', title: 'Walk [Coding]: C++ for quant (OOP, STL, templates)', daily_action: 'C++ practice (syntax + STL/problem) (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sklearn_ml', phase: 'fall-2026', title: 'Walk [Coding]: Numerical methods / optimization / ML basics (SciPy + sklearn)', daily_action: 'Alternate days: optimization/numerical methods and ML exercises (30-45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'stochastic_processes_intro', phase: 'fall-2026', title: 'Walk [Math]: Stochastic processes intro (Markov chains, Brownian motion intuition)', daily_action: 'Stochastic processes reading + notes/problem rep (30-45 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'rec_letters', phase: 'fall-2026', title: 'Run prep: Lock recommendation letters (faculty + work)', daily_action: null, start: '2026-09-01', end: '2026-12-15', deadline: '2026-12-15' },
+  { id: 'quant_projects', phase: 'fall-2026', title: 'Walk [Projects] -> Run bridge: Build quant projects (optimizer, factor/momentum backtests)', daily_action: 'Quant project coding + writeup progress (45-60 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_analytics', phase: 'fall-2026', title: 'Walk [Projects]: Portfolio analytics projects at work', daily_action: 'Look for analytics opportunities at Brown Advisory', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'work_python_tools', phase: 'fall-2026', title: 'Walk [Projects]: Python tools that solve real problems at Brown Advisory', daily_action: 'Build/improve a Python tool for work (30 min)', start: '2026-09-01', end: '2026-12-31' },
+  { id: 'sop_draft', phase: 'apps-2027', title: 'Run (MFE apps): Draft and finalize Statement of Purpose', daily_action: 'SoP drafting/revisions + school-specific tailoring (45 min)', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'grinold_kahn', phase: 'apps-2027', title: 'Run reading: Grinold & Kahn (support portfolio/risk project depth)', daily_action: 'Read + extract ideas for projects/interviews (30 min)', start: '2027-01-01', end: '2027-03-31' },
+  { id: 'portfolio_dashboard', phase: 'apps-2027', title: 'Run project: Interactive portfolio dashboard (Streamlit/Dash)', daily_action: 'Build/polish dashboard + docs/screenshots (45 min)', start: '2027-01-01', end: '2027-02-28' },
+  { id: 'app_gatech', phase: 'apps-2027', title: 'Run (MFE apps): Submit Georgia Tech MSQCF application', daily_action: null, start: '2027-01-01', end: '2027-03-01', deadline: '2027-03-01' },
+  { id: 'app_others', phase: 'apps-2027', title: 'Run (MFE apps): Submit NC State, UNC Charlotte, JHU applications', daily_action: null, start: '2027-01-01', end: '2027-03-15', deadline: '2027-03-15' },
+  { id: 'github_portfolio', phase: 'apps-2027', title: 'Run deliverable: GitHub portfolio (3+ well-documented quant repos)', daily_action: 'Polish repos, READMEs, and project writeups (30-45 min)', start: '2027-01-01', end: '2027-03-15' },
+  { id: 'quant_interview_prep', phase: 'apps-2027', title: 'Run prep: Quant interview drills (probability, stats, coding, market intuition)', daily_action: '45 min quant interview drills (probability/stats/coding/finance)', start: '2027-01-01', end: '2027-03-31' },
+  { id: 'mfe_application_assets', phase: 'apps-2027', title: 'Run deliverable: MFE application assets (resume, project summaries, coding writeups)', daily_action: 'Polish resume + project summaries + application short answers (30-45 min)', start: '2027-01-01', end: '2027-03-31' },
 ];
 
 let progress = {};
@@ -563,7 +567,21 @@ function getToken() { return localStorage.getItem('gsd_github_token'); }
 function setToken(t) { localStorage.setItem('gsd_github_token', t); }
 function clearToken() { localStorage.removeItem('gsd_github_token'); }
 
-function todayStr() { return new Date().toISOString().slice(0, 10); }
+const APP_TZ = "America/New_York";
+
+function ymdInET(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: APP_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const map = {};
+  for (const p of parts) map[p.type] = p.value;
+  return `${map.year}-${map.month}-${map.day}`;
+}
+
+function todayStr() { return ymdInET(new Date()); }
 
 function toast(msg, type) {
   const el = document.getElementById('toast');
@@ -631,7 +649,7 @@ function getStreak() {
   }
   // Look back up to 365 days
   for (let i = 0; i < 365; i++) {
-    const ds = d.toISOString().slice(0, 10);
+    const ds = ymdInET(d);
     if (log[ds] && log[ds].length > 0) {
       streak++;
       d.setDate(d.getDate() - 1);
@@ -859,7 +877,7 @@ function renderHistory() {
     for (let i = 6; i >= 0; i--) {
       const wd = new Date(d);
       wd.setDate(wd.getDate() + i);
-      weekDays.unshift(wd.toISOString().slice(0, 10));
+      weekDays.unshift(ymdInET(wd));
     }
     weeks.unshift({ start: weekDays[0], days: weekDays });
     d.setDate(d.getDate() - 7);
@@ -934,7 +952,7 @@ function buildHeatmap(log, today) {
     for (let d = 0; d < 7; d++) {
       const dt = new Date(start);
       dt.setDate(dt.getDate() + w * 7 + d);
-      const ds = dt.toISOString().slice(0, 10);
+      const ds = ymdInET(dt);
       const isFuture = ds > today;
       const active = getActiveTasksForDate(ds);
       const checked = (log[ds] || []).length;

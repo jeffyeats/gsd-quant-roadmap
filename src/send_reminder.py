@@ -11,7 +11,8 @@ import json
 import os
 import subprocess
 import sys
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 
@@ -54,6 +55,18 @@ MOTIVATIONAL_CLOSERS = [
     "Clock in. No days off from the mission.",
     "Your brother's at the Naval Academy grinding. Match that energy.",
 ]
+
+ET = ZoneInfo("America/New_York")
+
+
+def should_send_in_current_et_window(now_et: datetime) -> bool:
+    """Optional guard so dual UTC cron entries only send once at the intended ET time."""
+    if os.getenv("ENFORCE_ET_SEND_WINDOW", "0") != "1":
+        return True
+
+    target_hour = int(os.getenv("TARGET_ET_HOUR", "7"))
+    target_minute = int(os.getenv("TARGET_ET_MINUTE", "30"))
+    return now_et.hour == target_hour and now_et.minute == target_minute
 
 
 def get_closer(today: date) -> str:
@@ -225,10 +238,16 @@ def main():
     load_dotenv()
 
     if args.date:
-        from datetime import datetime
         today = datetime.strptime(args.date, "%Y-%m-%d").date()
     else:
-        today = date.today()
+        now_et = datetime.now(ET)
+        if not should_send_in_current_et_window(now_et):
+            print(
+                f"Skipping send (ET now {now_et.strftime('%H:%M')}, "
+                "outside configured ET send window)"
+            )
+            return
+        today = now_et.date()
 
     title = build_title(today)
     message = build_message(today)
