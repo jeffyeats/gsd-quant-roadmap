@@ -130,7 +130,8 @@
       "linalg"
     ],
     "2026-02-23": [
-      "linalg"
+      "linalg",
+      "rust_book"
     ]
   }
 }
