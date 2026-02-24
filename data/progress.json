@@ -133,7 +133,8 @@
       "linalg",
       "rust_book",
       "econ4960r",
-      "calc3"
+      "calc3",
+      "hull_derivatives_spring"
     ]
   }
 }
