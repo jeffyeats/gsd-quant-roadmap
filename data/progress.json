@@ -135,6 +135,9 @@
       "calc3",
       "hull_derivatives_spring",
       "linalg"
+    ],
+    "2026-02-24": [
+      "rust_book"
     ]
   }
 }
